@@ -107,3 +107,47 @@ total = total[!duplicated(total[,"標題"]),]
 
 write.csv(df,file = "拜託給我房子_R.csv")
 ```
+
+#將DataFrame 轉換成tabel
+```{r}
+library(xtable)
+news_Rent = total[total$新上架 == "新",]
+  msg <- mime_part(paste('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0
+  Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  </head>
+  <body>', print(xtable(news_Rent), type = 'html'), ',</body>
+  </html>'))
+```
+
+
+# 當有新房屋上架寄email通知
+# Send Gmail from Gmail
+## 需打開Google的低安全應用程式
+```{r}
+news_Rent = total[total$新上架 == "新",-1]
+
+library(mailR)
+  
+sender <- "sender@gmail.com"
+recipients <- c("recipients@gmail.com")
+user <- "user@gmail.com"
+passwd <- "Password"
+
+send.mail(from = sender,
+          to = recipients,
+          subject = "New Rent",
+          body = msg,
+          html = TRUE,
+          encoding = "utf-8",
+          smtp = list(host.name = "smtp.gmail.com", port = 465, 
+                      user.name = user,            
+                      passwd = passwd, 
+                      ssl = TRUE),
+                 authenticate = TRUE,
+                 send = TRUE)
+```
+

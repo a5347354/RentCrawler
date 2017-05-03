@@ -54,3 +54,26 @@ total = total[!duplicated(total[,"標題"]),]
 
 write.csv(total,file = "拜託給我房子_R.csv")
 
+
+news_Rent = total[total$新上架 == "新",-1]
+
+library(mailR)
+if(length(news_Rent) != 0){
+  sender <- "sender@gmail.com"
+  recipients <- c("recipients@gmail.com")
+  user <- "user@gmail.com"
+  passwd <- "Password"
+  
+  send.mail(from = sender,
+            to = recipients,
+            subject = "New Rent",
+            body = msg,
+            html = TRUE,
+            encoding = "utf-8",
+            smtp = list(host.name = "smtp.gmail.com", port = 465, 
+                        user.name = user,            
+                        passwd = passwd, 
+                        ssl = TRUE),
+            authenticate = TRUE,
+            send = TRUE)
+}
